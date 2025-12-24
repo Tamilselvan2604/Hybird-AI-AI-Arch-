@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCH-AI | Neural Floor Planner</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-base: #050505;
+            --sidebar-bg: #0a0a0a;
+            --sage: #4A6741;
+            --sage-glow: rgba(74, 103, 65, 0.3);
+            --border: rgba(255, 255, 255, 0.05);
+            --text-dim: #888;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-base);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        nav {
+            height: 70px;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-base);
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            letter-spacing: 3px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .workspace {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
+        }
+
+        .canvas-area {
+            flex: 1;
+            position: relative;
+            background-color: #080808;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        .canvas-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.01);
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .canvas-container img {
+            max-width: 85%;
+            max-height: 85%;
+            box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            transition: opacity 0.5s ease;
+        }
+
+        .canvas-tools {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            background: rgba(15,15,15,0.8);
+            backdrop-filter: blur(10px);
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: 1px solid var(--border);
+        }
+
+        .tool-btn {
+            color: var(--text-dim);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .tool-btn:hover { color: #fff; }
+
+        .sidebar {
+            width: 420px;
+            background: var(--sidebar-bg);
+            border-left: 1px solid var(--border);
+            display: flex; flex-direction: column;
+            padding: 40px 30px;
+        }
+
+        .sidebar-header { margin-bottom: 30px; }
+        .sidebar-header h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; margin-bottom: 5px; }
+        .sidebar-header p { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--sage); }
+
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .chat-history::-webkit-scrollbar { width: 3px; }
+        .chat-history::-webkit-scrollbar-thumb { background: var(--border); }
+
+        .msg { margin-bottom: 25px; font-size: 14px; line-height: 1.6; }
+        .msg.ai { color: #ccc; padding-left: 15px; border-left: 1px solid var(--sage); }
+        .msg.user { color: #fff; text-align: right; padding-right: 15px; border-right: 1px solid var(--text-dim); }
+
+        .chat-input-container {
+            position: relative;
+            background: #111;
+            border: 1px solid var(--border);
+            padding: 5px;
+            display: flex;
+        }
+
+        .chat-input-container input {
+            flex: 1; background: none; border: none; color: #fff;
+            padding: 15px; font-family: 'Inter', sans-serif; outline: none;
+        }
+
+        .send-btn {
+            background: var(--sage); color: #fff;
+            border: none; width: 50px; cursor: pointer; transition: 0.3s;
+        }
+        .send-btn:hover { background: #5a7d50; }
+
+        .footer-nav { position: absolute; top: 20px; left: 20px; }
+        .btn-outline {
+            text-decoration: none; color: var(--text-dim); font-size: 11px;
+            text-transform: uppercase; letter-spacing: 2px;
+            padding: 10px 20px; border: 1px solid var(--border); transition: 0.3s;
+        }
+        .btn-outline:hover { color: #fff; border-color: #fff; }
+
+        .finalize-area { margin-top: 30px; }
+        .btn-finalize {
+            width: 100%; background: none; border: 1px solid var(--sage);
+            color: var(--sage); padding: 18px; text-transform: uppercase;
+            letter-spacing: 2px; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-finalize:hover { background: var(--sage); color: #fff; }
+
+        .fade-update { animation: imgFade 1.5s forwards; }
+        @keyframes imgFade {
+            0% { opacity: 0.3; filter: blur(10px); }
+            100% { opacity: 1; filter: blur(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('workspace') }}" class="logo">ARCH-AI</a>
+        <div id="statusTag" style="font-size: 10px; color: var(--text-dim); letter-spacing: 2px;">NEURAL INTERFACE: READY</div>
+    </nav>
+
+    <div class="workspace">
+        <div class="canvas-area">
+            <div class="footer-nav">
+                <a href="{{ url_for('workspace') }}" class="btn-outline">← Exit Workspace</a>
+            </div>
+
+            <div class="canvas-container">
+                <img id="planDisplay" src="https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=1000" alt="Blueprint">
+                
+                <div class="canvas-tools">
+                    <button class="tool-btn"><i class="fas fa-search-plus"></i></button>
+                    <button class="tool-btn"><i class="fas fa-search-minus"></i></button>
+                    <button class="tool-btn"><i class="fas fa-layer-group"></i> Layers</button>
+                    <button class="tool-btn"><i class="fas fa-print"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <p>Neural Designer</p>
+                <h2>Interface</h2>
+            </div>
+
+            <div class="chat-history" id="chat">
+                <div class="msg ai">
+                    System initialized. I am ready to generate your floor plan.
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" id="userInput" placeholder="Describe layout (e.g. 2BHK modern villa)..." onkeypress="handleKey(event)">
+                <button class="send-btn" id="sendBtn" onclick="processCmd()"><i class="fas fa-arrow-right"></i></button>
+            </div>
+
+            <div class="finalize-area">
+                <button class="btn-finalize" onclick="finalizeReport()">Finalize & Export 3D</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const chat = document.getElementById('chat');
+    const input = document.getElementById('userInput');
+    const img = document.getElementById('planDisplay');
+    const statusTag = document.getElementById('statusTag');
+
+    function handleKey(e) { if(e.key === 'Enter') processCmd(); }
+
+    async function saveFloorPlanToServer(imageUrl) {
+        try {
+            const response = await fetch('/api/save-floor-plan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ image_url: imageUrl })
+            });
+            
+            const data = await response.json();
+            if (data.success) {
+                console.log('Floor plan saved to server');
+            } else {
+                console.error('Failed to save floor plan:', data.error);
+            }
+        } catch (error) {
+            console.error('Error saving floor plan:', error);
+        }
+    }
+
+    async function processCmd() {
+        const val = input.value.trim().toLowerCase();
+        if(!val) return;
+
+        // --- CONDITION: BLOCK NON-ARCHITECTURAL REQUESTS ---
+        const allowedKeywords = ['floor', 'plan', 'layout', 'room', 'house', 'villa', 'apartment', 'schematic', 'blueprint', 'architectural', 'bedroom', 'kitchen', 'office', 'wall', 'dimension'];
+        const isArchitectural = allowedKeywords.some(keyword => val.includes(keyword));
+
+        chat.innerHTML += `<div class="msg user">${val}</div>`;
+        input.value = "";
+        chat.scrollTop = chat.scrollHeight;
+
+        if (!isArchitectural) {
+            setTimeout(() => {
+                chat.innerHTML += `<div class="msg ai" style="color:#d9534f">System Error: Invalid Request. The ARCH-AI Neural Interface only processes structural and architectural schematics. Please describe a floor plan.</div>`;
+                chat.scrollTop = chat.scrollHeight;
+            }, 500);
+            return;
+        }
+
+        // Proceed with Generation if valid
+        statusTag.innerText = "NEURAL ENGINE: GENERATING...";
+        img.style.opacity = "0.3";
+
+        try {
+            // STRICT PROMPT ENGINEERING: Force architectural output 
+            const strictPrompt = `STRICT ARCHITECTURAL BLUEPRINT: 2D professional architectural floor plan of ${val}. 
+            Technical schematic style, high-contrast black lines, white background, no 3D elements, no realistic textures, include room labels, high precision vectors.`;
+
+            const response = await puter.ai.txt2img(strictPrompt, {
+                model: "gemini-2.5-flash-image-preview"
+            });
+
+            img.src = response.src;
+            img.classList.remove('fade-update');
+            void img.offsetWidth; 
+            img.classList.add('fade-update');
+            img.style.opacity = "1";
+
+            chat.innerHTML += `<div class="msg ai">Schematic generated: "${val}". High-fidelity vectors applied to finalized layout.</div>`;
+            
+            // Save to localStorage (for immediate access)
+            localStorage.setItem('final_generated_plan', response.src);
+            
+            // Save to server (for persistent storage)
+            await saveFloorPlanToServer(response.src);
+
+        } catch (err) {
+            console.error(err);
+            chat.innerHTML += `<div class="msg ai" style="color:red">Error: Quota reached or connection lost.</div>`;
+        } finally {
+            statusTag.innerText = "NEURAL INTERFACE: ACTIVE";
+            chat.scrollTop = chat.scrollHeight;
+        }
+    }
+
+    function finalizeReport() {
+        window.location.href = '/final-report';
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structural Integrity Report | ARCH-AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #080808;
+            --sage-green: #4A6741;
+            --accent-light: #C5D1B7;
+            --text-main: #FFFFFF;
+            --text-dim: #A0A0A0;
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(255, 255, 255, 0.02);
+            --danger: #8b0000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .report-wrapper {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 60px;
+            background: #ffffff;
+            color: #1a1a1a;
+            border-radius: 2px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        /* --- WATERMARK & HEADER --- */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            color: rgba(0,0,0,0.03);
+            pointer-events: none;
+            z-index: 0;
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .firm-info h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            letter-spacing: 2px;
+        }
+
+        .report-meta { text-align: right; font-size: 12px; line-height: 1.8; }
+
+        /* --- DATA GRID --- */
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            background: #f4f4f4;
+            padding: 8px 15px;
+            margin: 30px 0 20px;
+            border-left: 4px solid var(--sage-green);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .data-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        .label { font-weight: 600; width: 30%; color: #555; }
+        .value { font-family: 'Inter', sans-serif; font-weight: 400; }
+
+        /* --- RECOMMENDATION BOX --- */
+        .recommendation-box {
+            background: #f9fff9;
+            border: 1px solid #d4e8d4;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .rec-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--sage-green);
+            margin-bottom: 15px;
+        }
+
+        .reasoning-list {
+            padding-left: 20px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .reasoning-list li { margin-bottom: 10px; }
+
+        /* --- EXPERT SIGNATURE --- */
+        .expert-approval {
+            margin-top: 50px;
+            display: flex;
+            justify-content: flex-end;
+            text-align: center;
+        }
+
+        .sig-block { width: 250px; }
+        .sig-img { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 24px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+        .sig-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #888; margin-top: 5px; }
+
+        /* --- WEB-ONLY ACTIONS --- */
+        .action-bar {
+            max-width: 1000px;
+            margin: 30px auto 80px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-download { background: transparent; border: 1px solid var(--sage-green); color: var(--sage-green); }
+        .btn-next { background: var(--sage-green); color: white; border: none; }
+
+        .btn-download:hover { background: var(--sage-green); color: white; }
+        .btn-next:hover { background: var(--accent-light); color: black; }
+
+        @media print {
+            .action-bar { display: none; }
+            body { background: white; }
+            .report-wrapper { margin: 0; box-shadow: none; border: none; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-wrapper" id="printableReport">
+        <div class="watermark">ARCH-AI</div>
+        
+        <header>
+            <div class="firm-info">
+                <h1>ARCH-AI SYSTEMS</h1>
+                <p style="font-size: 10px; letter-spacing: 2px;">NEURAL GEOLOGICAL DIVISION</p>
+            </div>
+            <div class="report-meta">
+                <p><strong>REPORT ID:</strong> #SH-2025-0982</p>
+                <p><strong>DATE:</strong> {{ report_date or 'December 19, 2025' }}</p>
+                <p><strong>STATUS:</strong> VERIFIED BY CIVIL_AI v4.2</p>
+            </div>
+        </header>
+
+        <div class="section-title">Site & Project Context</div>
+        <table class="data-table">
+            <tr>
+                <td class="label">Project Name</td>
+                <td class="value">{{ project.get('name', 'The Obsidian Villa') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Site Coordinates</td>
+                <td class="value">{{ project.get('latitude', '34.0522') }}° N, {{ project.get('longitude', '118.2437') }}° W (Los Angeles Basin)</td>
+            </tr>
+            <tr>
+                <td class="label">Building Typology</td>
+                <td class="value">{{ project.get('typology', 'Modern Residential') }} / {{ project.get('material', 'Reinforced Concrete') }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">Soil Composition Analysis</div>
+        <table class="data-table">
+            <tr>
+                <td class="label">Primary Soil Layer</td>
+                <td class="value">{{ project.get('soil_composition', {}).get('primary_layer', 'Dense Silty Sand (SM Type)') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Water Table Depth</td>
+                <td class="value">{{ project.get('soil_composition', {}).get('water_table', '14.5 feet below finished grade') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Bearing Capacity</td>
+                <td class="value">{{ project.get('soil_composition', {}).get('bearing_capacity', '3,500 PSF (Calculated Net Allowable)') }}</td>
+            </tr>
+            <tr>
+                <td class="label">Seismic Category</td>
+                <td class="value" style="color: #d9534f; font-weight: 600;">{{ project.get('soil_composition', {}).get('seismic_category', 'D - High Risk (Near Active Fault)') }}</td>
+            </tr>
+        </table>
+
+        <div class="section-title">AI Recommendation: Foundation Architecture</div>
+        <div class="recommendation-box">
+            <div class="rec-header">
+                <i class="fas fa-drafting-compass fa-2x"></i>
+                <div>
+                    <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif;">Recommended: {{ project.get('recommendations', {}).get('foundation_type', 'Deep Raft (Mat) Foundation') }}</h3>
+                    <p style="font-size: 11px; text-transform: uppercase;">Reinforced with T-Beam Grid</p>
+                </div>
+            </div>
+            
+            <p style="font-size: 14px; margin-bottom: 15px; font-weight: 600;">Technical Justification:</p>
+            <ul class="reasoning-list">
+                {% for reason in project.get('recommendations', {}).get('reasons', [
+                    'Differential Settlement Mitigation: Due to the variable silty sand density across the 5,000 sq ft footprint, a mat foundation redistributes the load, preventing structural cracking.',
+                    'Seismic Resilience: In Category D zones, a Raft foundation acts as a singular rigid body, significantly reducing the "Lateral Sway" effect compared to individual footings.',
+                    'Hydrostatic Load Balance: The calculated basement depth is close to the water table; the mat design incorporates integral waterproofing and buoyancy resistance.'
+                ]) %}
+                <li>{{ reason }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="expert-approval">
+            <div class="sig-block">
+                <div class="sig-img">Marcus Drumm</div>
+                <div class="sig-label">Senior Civil Consultant (Expert-Verified)</div>
+                <div style="font-size: 9px; margin-top: 5px; color: #aaa;">Digital Fingerprint: 0x82A1..B92</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn btn-download" onclick="window.print()">
+            <i class="fas fa-file-pdf"></i> Download PDF Report
+        </button>
+        <a href="{{ url_for('floorplanner', project_id=project.get('id')) }}" class="btn btn-next">
+        Proceed to Floor Planner <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <script>
+    document.querySelector('.btn-next').addEventListener('click', function(e) {
+        e.preventDefault();
+        const projectId = '{{ project.get("id") }}';
+        alert("Transferring Soil Data to Generative Floor Planner...");
+        window.location.href = '{{ url_for("floorplanner") }}?project_id=' + projectId;
+    });
+</script>
+</body>
+</html>

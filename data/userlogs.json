@@ -1,0 +1,162 @@
+{
+  "Vignesh2604.m@gmail.com": [
+    {
+      "timestamp": "2025-12-24T02:13:54.819809",
+      "action": "account_created",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:23.115082",
+      "action": "login",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:23.129091",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:42.972185",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:46.562623",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:47.628999",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:48.225865",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:14:57.115970",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:15:01.080530",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:15:07.542209",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:15:12.661878",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:15:35.287536",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    }
+  ],
+  "vignesh2604.m1@gmail.com": [
+    {
+      "timestamp": "2025-12-24T02:19:00.942112",
+      "action": "account_created",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:19:41.526217",
+      "action": "login",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:19:41.541305",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:20:20.854524",
+      "action": "created_project",
+      "project_name": "Tamil_construction",
+      "details": "Typology: Commercial"
+    },
+    {
+      "timestamp": "2025-12-24T02:20:20.896659",
+      "action": "viewed_report",
+      "project_name": "Tamil_construction",
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:20:32.065371",
+      "action": "generated_floor_plan",
+      "project_name": "Tamil_construction",
+      "details": "Static floor plan generated"
+    },
+    {
+      "timestamp": "2025-12-24T02:20:32.076387",
+      "action": "accessed_floorplanner",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:20:37.131122",
+      "action": "generated_final_report",
+      "project_name": "Tamil_construction",
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:20:43.163440",
+      "action": "accessed_floorplanner",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:21:08.586451",
+      "action": "saved_floor_plan_image",
+      "project_name": "Tamil_construction",
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:21:19.854297",
+      "action": "generated_final_report",
+      "project_name": "Tamil_construction",
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:21:32.682423",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:21:44.542257",
+      "action": "deleted_project",
+      "project_name": "Tamil_construction",
+      "details": null
+    },
+    {
+      "timestamp": "2025-12-24T02:21:44.574006",
+      "action": "accessed_workspace",
+      "project_name": null,
+      "details": null
+    }
+  ]
+}

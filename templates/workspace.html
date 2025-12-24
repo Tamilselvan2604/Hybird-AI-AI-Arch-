@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workspace | ARCH-AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #080808;
+            --sage: #4A6741;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --text-dim: #A0A0A0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        nav {
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; text-decoration: none; color: white; }
+
+        .workspace-container { max-width: 1200px; margin: 60px auto; padding: 0 40px; }
+
+        .header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; }
+        .header-row h1 { font-family: 'Cormorant Garamond', serif; font-size: 42px; }
+
+        .btn-new {
+            background: var(--sage);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-new:hover { background: #5a7d50; transform: translateY(-2px); }
+
+        /* PROJECT GRID */
+        .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
+
+        .project-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            padding: 30px;
+            transition: 0.4s;
+            position: relative;
+        }
+        .project-card:hover { border-color: var(--sage); transform: translateY(-5px); }
+
+        .status-dot { width: 8px; height: 8px; background: var(--sage); border-radius: 50%; display: inline-block; margin-right: 10px; }
+
+        .project-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; margin: 15px 0 10px; }
+        .project-card p { color: var(--text-dim); font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+
+        .card-actions { display: flex; gap: 15px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .action-link { color: var(--text-dim); text-decoration: none; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .action-link:hover { color: white; }
+        .delete-link:hover { color: #ff4d4d; }
+
+        .empty-state { text-align: center; padding: 100px 0; color: var(--text-dim); }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="{{ url_for('index') }}" class="logo">ARCH-AI</a>
+        <div class="user-meta" style="font-size: 11px; letter-spacing: 1px; color: var(--sage);">
+            {% if session.get('user_name') %}
+                {{ session.user_name|upper }} // ACTIVE
+            {% else %}
+                ARCHITECT_PORTAL // ACTIVE
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="workspace-container">
+        <div class="header-row">
+            <div>
+                <p style="color: var(--sage); text-transform: uppercase; font-size: 11px; letter-spacing: 3px; margin-bottom: 10px;">Portfolio Management</p>
+                <h1>Project Workspace</h1>
+            </div>
+            <a href="{{ url_for('soil_analyze') }}" class="btn-new"><i class="fas fa-plus"></i> New Project</a>
+        </div>
+
+        <div class="project-grid" id="projectGrid">
+            {% if projects and projects|length > 0 %}
+                {% for project in projects %}
+                <div class="project-card">
+                    <span class="status-dot"></span>
+                    <span style="font-size: 10px; text-transform: uppercase; color: var(--sage);">
+                        {{ project.get('status', 'In Analysis') }}
+                    </span>
+                    <h3>{{ project.get('name', 'Unnamed Project') }}</h3>
+                    <p>
+                        {% if project.get('latitude') and project.get('longitude') %}
+                        Location: {{ project.latitude|round_coordinate(4) }}, {{ project.longitude|round_coordinate(4) }}<br>
+                        {% endif %}
+                        {{ project.get('typology', 'Not specified') }}
+                    </p>
+                    <div class="card-actions">
+                        <a href="{{ url_for('floorplanner', project_id=project.id) }}" class="action-link">Open Canvas</a>
+                        <a href="{{ url_for('soil_analyze') }}?edit={{ project.id }}" class="action-link">Edit Data</a>
+                        <a href="#" class="action-link delete-link" onclick="deleteProject('{{ project.id }}', this)">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No projects yet. <a href="{{ url_for('soil_analyze') }}" style="color: var(--sage);">Create your first project</a></p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        function deleteProject(projectId, el) {
+            if(confirm("Are you sure you want to delete this project? Data cannot be recovered.")) {
+                fetch('/api/project/' + projectId + '/delete', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success) {
+                        el.closest('.project-card').remove();
+                        // If no projects left, show empty state
+                        if(document.querySelectorAll('.project-card').length === 0) {
+                            location.reload();
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>

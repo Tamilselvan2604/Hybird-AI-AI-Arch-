@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Project Dossier | ARCH-AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #080808;
+            --sage: #4A6741;
+            --text-main: #FFFFFF;
+            --text-dim: #A0A0A0;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            padding: 40px;
+        }
+
+        .report-page {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            color: #1a1a1a;
+            padding: 80px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #1a1a1a;
+            padding-bottom: 20px;
+            margin-bottom: 50px;
+        }
+
+        .logo-area h1 { font-family: 'Cormorant Garamond', serif; font-size: 28px; }
+        .meta-data { text-align: right; font-size: 11px; text-transform: uppercase; color: #666; }
+
+        .section { margin-bottom: 40px; }
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: var(--sage);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .data-item { font-size: 13px; border-bottom: 1px solid #f9f9f9; padding: 10px 0; }
+        .label { font-weight: 600; color: #888; text-transform: uppercase; font-size: 10px; }
+
+        .status-badge {
+            font-size: 9px;
+            background: #f0f4f0;
+            color: var(--sage);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .visual-container {
+            margin: 20px 0;
+            border: 1px solid #eee;
+            padding: 10px;
+            text-align: center;
+            background: #fafafa;
+        }
+        .visual-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        .caption { font-size: 10px; color: #999; margin-top: 8px; font-style: italic; }
+
+        .summary-box {
+            background: #fdfdfd;
+            border: 1px solid #efefef;
+            padding: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .action-btns {
+            max-width: 900px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 11px;
+            cursor: pointer;
+            border: none;
+            transition: 0.3s;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn-print { background: var(--sage); color: white; }
+        .btn-home { background: transparent; border: 1px solid var(--border); color: white; }
+
+        @media print {
+            .action-btns { display: none; }
+            body { background: white; padding: 0; }
+            .report-page { box-shadow: none; width: 100%; margin: 0; border: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="report-page" id="reportContent">
+        <header>
+            <div class="logo-area">
+                <h1>ARCH-AI</h1>
+                <p style="font-size: 9px; letter-spacing: 2px; color: #888;">NEURAL ARCHITECTURE GROUP</p>
+            </div>
+            <div class="meta-data">
+                <p>Project ID: <strong>{{ project.id if project else 'AV-2025-001' }}</strong></p>
+                <p>Date: <span id="currentDate">{{ current_date if current_date else 'Dec 19, 2025' }}</span></p>
+            </div>
+        </header>
+
+        <div class="section">
+            <div class="section-title">01. Project Intake Summary <span class="status-badge">Completed</span></div>
+            <div class="grid">
+                <div class="data-item"><p class="label">Project Name</p><p>{{ project.name if project else 'The Obsidian Villa' }}</p></div>
+                <div class="data-item"><p class="label">Location</p><p>{{ project.latitude if project else '34.0522' }} N, {{ project.longitude if project else '118.2437' }} W</p></div>
+                <div class="data-item"><p class="label">Typology</p><p>{{ project.typology if project else 'Residential' }}</p></div>
+                <div class="data-item"><p class="label">Materiality</p><p>{{ project.material if project else 'Reinforced Concrete' }}</p></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">02. Geological Intelligence <span class="status-badge">AI Verified</span></div>
+            <p style="font-size: 13px; color: #555; margin-bottom: 15px;">Automated boring logs indicate dense silty sand with a safe bearing capacity of 3,500 PSF. Seismic risk categorized as High (Zone D) based on site coordinates.</p>
+            
+            <div class="visual-container">
+                <div style="height: 100px; background: repeating-linear-gradient(45deg, #f9f9f9, #f9f9f9 10px, #f1f1f1 10px, #f1f1f1 20px);"></div>
+                <p class="caption">Fig 2.1: Neural Soil Profile Analysis</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">03. Engineering Protocol <span class="status-badge">Optimal</span></div>
+            <div class="summary-box">
+                <strong>Recommended Foundation: Deep Raft (Mat) Foundation.</strong><br>
+                <p style="margin-top: 10px;">The AI recommends a Mat Foundation to mitigate differential settlement. This provides a monolithic slab that behaves as a single unit during seismic events, essential for the {{ project.name if project else 'Obsidian Villa' }}'s structural integrity.</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">04. Finalized Schematic <span class="status-badge">Design Locked</span></div>
+            <div class="visual-container">
+                <img id="finalReportImage" 
+                     src="{{ project.latest_floor_plan if project and project.latest_floor_plan else 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?auto=format&fit=crop&q=80&w=800' }}" 
+                     alt="Final Floor Plan">
+                <p class="caption">Fig 4.1: Neural Generative Output - Custom Schematic</p>
+            </div>
+        </div>
+
+        <div class="section" style="border-top: 1px solid #eee; padding-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 11px; color: #999;">
+                Certified by ARCH-AI Neural Interface<br>
+                Signature: <em>0x7129...E4A</em>
+            </div>
+            <div style="text-align: right;">
+                <p style="font-size: 10px; text-transform: uppercase; color: #888;">Expert Approval</p>
+                <p style="font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic;">Marcus Drumm</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-btns">
+        <a href="/workspace" class="btn btn-home">Return to Dashboard</a>
+        <button class="btn btn-print" onclick="window.print()"><i class="fas fa-print"></i> Print Full Dossier</button>
+    </div>
+
+    <script>
+        // 1. Try to get image from localStorage first (for immediate updates)
+        const savedPlan = localStorage.getItem('final_generated_plan');
+        if(savedPlan) {
+            document.getElementById('finalReportImage').src = savedPlan;
+        }
+        // Note: If localStorage doesn't have it, the template already sets a default
+        // based on project.latest_floor_plan
+
+        // 2. Automatically set today's date
+        const today = new Date();
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        document.getElementById('currentDate').innerText = today.toLocaleDateString('en-US', options);
+    </script>
+</body>
+</html>

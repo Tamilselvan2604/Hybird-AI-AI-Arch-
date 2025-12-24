@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Internal Server Error | ARCH-AI</title>
+    <style>
+        body {
+            background: #080808;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .error-container {
+            max-width: 600px;
+            padding: 40px;
+        }
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 72px;
+            color: #8b0000;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #A0A0A0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        a {
+            color: #4A6741;
+            text-decoration: none;
+            border-bottom: 1px solid #4A6741;
+            padding-bottom: 5px;
+        }
+        a:hover {
+            color: #C5D1B7;
+            border-color: #C5D1B7;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>500</h1>
+        <p>Something went wrong on our end. Please try again later.</p>
+        <p><a href="{{ url_for('index') }}">Return to Homepage</a></p>
+    </div>
+</body>
+</html>

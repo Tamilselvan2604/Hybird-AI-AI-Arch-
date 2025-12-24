@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCH-AI | Design Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0f0f0f;
+            --arch-green: #3d5a45;
+            --accent-green: #a3b18a;
+            --text-light: #e0e0e0;
+            --glass: rgba(20, 20, 20, 0.7);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-light);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: 
+                linear-gradient(rgba(61, 90, 69, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(61, 90, 69, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        .bg-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(61, 90, 69, 0.15) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            z-index: -1;
+            filter: blur(80px);
+        }
+
+        .container {
+            width: 1000px;
+            height: 600px;
+            display: flex;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .overlay-panel {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            background: var(--arch-green);
+            z-index: 10;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            text-align: center;
+            border-left: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .container.active .overlay-panel { transform: translateX(-100%); }
+
+        .form-box {
+            width: 50%;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: 38px; margin-bottom: 10px; }
+
+        p.subtitle {
+            font-size: 11px;
+            color: #888;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .input-wrapper { margin-bottom: 25px; position: relative; }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            color: var(--accent-green);
+        }
+
+        input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #444;
+            padding: 10px 0;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus { border-bottom-color: var(--accent-green); }
+
+        .btn-primary {
+            background: var(--arch-green);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary:hover { background: var(--accent-green); color: #1a1a1a; }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 12px 30px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .btn-outline:hover { background: white; color: var(--arch-green); }
+
+        .overlay-panel h1 { font-family: 'Cormorant Garamond', serif; font-size: 45px; margin-bottom: 20px; }
+        .overlay-panel p { font-weight: 300; line-height: 1.8; margin-bottom: 30px; opacity: 0.8; }
+        .hidden { display: none; }
+
+        /* Flash messages styling */
+        .flash-message {
+            background: rgba(255, 77, 77, 0.1);
+            border-left: 3px solid #ff4d4d;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #ff6b6b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            .container { width: 90%; height: auto; flex-direction: column; }
+            .overlay-panel { display: none; }
+            .form-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <div class="container" id="container">
+        <div class="form-box" id="login-side">
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Secure Architect Login</p>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="input-wrapper">
+                    <label>Registration Email</label>
+                    <input type="email" name="email" placeholder="name@firm.com" required>
+                </div>
+                <div class="input-wrapper">
+                    <label>Access Key</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Initialize Access</button>
+            </form>
+        </div>
+
+        <div class="form-box" id="signup-side">
+            <h2>Join the Studio</h2>
+            <p class="subtitle">Create your AI workspace</p>
+            <form action="{{ url_for('signup') }}" method="POST">
+                <div class="input-wrapper">
+                    <label>Full Name</label>
+                    <input type="text" name="name" placeholder="Architect Name" required>
+                </div>
+                <div class="input-wrapper">
+                    <label>Firm Email</label>
+                    <input type="email" name="email" placeholder="name@firm.com" required>
+                </div>
+                <div class="input-wrapper">
+                    <label>Create Access Key</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Register Studio</button>
+            </form>
+        </div>
+
+        <div class="overlay-panel">
+            <div id="overlay-login-text">
+                <h1>Dream in Structure.</h1>
+                <p>Access our generative AI suite to transform sketches into photorealistic renders in seconds.</p>
+                <button class="btn-outline" onclick="toggle()">New Architect? Register</button>
+            </div>
+            <div id="overlay-signup-text" class="hidden">
+                <h1>Scale Your Vision.</h1>
+                <p>Join the next generation of architectural intelligence. Efficiency meets aesthetics.</p>
+                <button class="btn-outline" onclick="toggle()">Have an Account? Sign In</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const loginText = document.getElementById('overlay-login-text');
+        const signupText = document.getElementById('overlay-signup-text');
+
+        function toggle() {
+            container.classList.toggle('active');
+            setTimeout(() => {
+                loginText.classList.toggle('hidden');
+                signupText.classList.toggle('hidden');
+            }, 300);
+        }
+    </script>
+</body>
+</html>
