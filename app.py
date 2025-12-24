@@ -19,8 +19,8 @@ app.config['SESSION_REFRESH_EACH_REQUEST'] = True
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # For Gmail, change for other providers
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'vignesh2604.m@gmail.com'  # REPLACE WITH YOUR EMAIL
-app.config['MAIL_PASSWORD'] = 'bgit bnbt vdga umse'  # REPLACE WITH YOUR APP PASSWORD
+app.config['MAIL_USERNAME'] = 'your_gmail@gmail.com'  # REPLACE WITH YOUR EMAIL
+app.config['MAIL_PASSWORD'] = '#### #### #### ####'  # REPLACE WITH YOUR APP PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = 'noreply@arch-ai.com'
 app.config['ARCH_AI_ADMIN_EMAIL'] = 'admin@arch-ai.com'  # Admin email for contact form
 
